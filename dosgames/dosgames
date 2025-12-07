@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+cd "$DOSROOT"
+
+game="$(cat index.txt | fzf --preview='fzf_preview boxart/{}.jpg')"
+
+if [[ "$game" != "" ]]; then
+    flatpak run io.github.dosbox-staging -conf ./common.conf -conf "./dosbox/$game.conf"
+
+    # And this is MRU.
+    # https://stackoverflow.com/a/67031431
+    printf "/%s/m0\nwq\n" "$game" | ed -s index.txt -
+fi
