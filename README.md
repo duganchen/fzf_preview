@@ -22,6 +22,7 @@ You should have image previews for the movie and still image, and a normal previ
 These are some of the uses I've found for it:
 
 * [DOS games](./dosgames/README.md)
+* [TV episodes](./episodes/README.md)
 
 ## Note:
 
