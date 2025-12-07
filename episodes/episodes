@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+cache="${XDG_CACHE_DIR:-$HOME/.cache}/fzf_flicks"
+index="$(realpath "$1")"
+
+if [ ! -f "$index" ]; then
+	echo Index not found.
+	exit 1
+fi
+
+mkdir -p "${cache}"
+
+function to_key() {
+	return "$(stat -c %D_%i "$1")"
+}
+
+cd "$(dirname "$1")" || exit 1
+
+while read -r line; do
+	flick="$(echo "$line" | cut -d"$(printf '\t')" -f1)"
+
+	if [ -f "$flick" ]; then
+		# Let's just generate all the thumbnails up front.
+		# The last two parameters are copied from here:
+		# https://github.com/gmou3/fzf-preview/blob/main/fzf-file2preview.sh
+
+
+		# The key is the device number and inode number. Very fast, and good enough for files that don't change.
+
+		thumbnail="$cache/$(stat -c %D_%i "$flick").png";
+		if [ ! -f "$thumbnail" ]; then
+			ffmpegthumbnailer -i "$flick" -o "$cache/$(stat -c %D_%i "$flick").png" -s 1080 -m
+		fi
+	fi 
+done < "$index"
+
+flick="$(cat "$index" | fzf -d"$(printf '\t')" -n2 --accept-nth=1 --with-nth=2 --preview='fzf_preview_thumbnail {1}')"
+
+if [ -f "$flick" ]; then
+	mpv "$flick"
+fi
