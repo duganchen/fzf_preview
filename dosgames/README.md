@@ -47,7 +47,7 @@ My DOSBOX conf file for Eric the Unready, to use as our example, looks like this
 
     [autoexec]
     @ECHO OFF
-    IMGMOUNT D d/ERIC.iso -t cdrom
+    IMGMOUNT D d/ERIC.iso -t iso
     MOUNT C c
     C:
     CD ERIC
