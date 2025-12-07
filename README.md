@@ -17,6 +17,12 @@ To test, put a still image, a movie, and a file of another type, into a director
 
 You should have image previews for the movie and still image, and a normal preview for the third file.
 
+## Use Cases
+
+These are some of the uses I've found for it:
+
+* [DOS games](./dosgames/README.md)
+
 ## Note:
 
 I'm running Ghostty with FISH on Fedora, and that's what this is coded for. Expanding this to support
