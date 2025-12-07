@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ "$TERM" == "xterm-ghostty" || "$TERM" == "xterm-kitty" ]]; then
+	exit 0
+else
+	exit 1
+fi

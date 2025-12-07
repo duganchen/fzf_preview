@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+if [ ! -f "$1" ]; then
+	echo "$1" not found.
+	exit 1
+fi
+
+cache="${XDG_CACHE_DIR:-$HOME/.cache/fzf_thumbnails}"
+mkdir -p "$cache"
+
+image="";
+if fzf_can_show_image; then
+	video=False
+
+	mime="$(file --mime-type -b "$1" | cut -d/ -f1)"
+
+	if [[ "$mime" == "image" ]]; then
+		image="$1"
+	elif [[ "$mime" == "video" ]]; then
+		video=True
+	elif [[ "$(file -b "$1")" == "RealMedia file" ]]; then
+		video=True
+	fi
+
+	if [[ "$video" == True ]]; then
+		image="${cache}/$(stat -c "%D_%i_%Y_%s" "$1").png"
+
+		if [ ! -f "$image" ]; then
+			ffmpegthumbnailer -i "$1" -o "${image}" -s 1080 -m > /dev/null 2>&1
+		fi
+	fi
+fi
+
+if [[ "$image" != "" ]]; then
+	fzf_show_image "$image"
+else
+	if [[ "$NNN_PISTOL" == "1" ]]; then
+		fzf_clear_image
+		pistol "$1"
+	elif [[ "$NNN_SCOPE" == "1" ]]; then
+		fzf_clear_image
+		scope.sh "$1" "$FZF_PREVIEW_COLUMNS" "$FZF_PREVIEW_LINES" "$cache" False
+	else
+		fzf_clear_image
+		echo No previewer configured.
+	fi
+fi
