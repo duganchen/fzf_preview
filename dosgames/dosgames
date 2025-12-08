@@ -12,5 +12,5 @@ if [[ "$game" != "" ]]; then
 
     # And this is MRU.
     # https://stackoverflow.com/a/67031431
-    printf "/%s/m0\nwq\n" "$game" | ed -s index.txt -
+    printf "/^%s$/m0\nwq\n" "$game" | ed -s index.txt -
 fi
