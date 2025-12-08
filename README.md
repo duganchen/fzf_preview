@@ -2,7 +2,7 @@
 
 A previewer for FZF.
 
-Note that the current implementation does *not* support terminals other than Kitty and Ghostty.
+Note that the current implementation supports only the Kitty protocol, and has been tested only in Ghostty.
 
 Copy the scripts to a directory on your PATH.
 
@@ -13,7 +13,9 @@ https://github.com/jarun/nnn/blob/master/plugins/preview-tabbed
 
 To test, put a still image, a movie, and a file of another type, into a directory. Then cd to that directory and do:
 
-    find . -type f -maxdepth 1 | fzf --preview='fzf_preview {}'
+    find . -type f -maxdepth 1 | fzf --preview='fzf_preview -i {}'
+
+The "-i" flag indicates that your terminal supports image previews.
 
 You should have image previews for the movie and still image, and a normal preview for the third file.
 

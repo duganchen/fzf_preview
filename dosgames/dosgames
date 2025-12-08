@@ -2,8 +2,11 @@
 
 cd "$DOSROOT"
 
-game="$(cat index.txt | fzf --preview='fzf_preview boxart/{}.jpg')"
-
+if fzf_can_show_image; then
+	game="$(cat index.txt | fzf --preview='fzf_preview -i boxart/{}.jpg')"
+else
+	game="$(cat index.txt | fzf --preview='fzf_preview boxart/{}.jpg')"
+fi
 if [[ "$game" != "" ]]; then
     flatpak run io.github.dosbox-staging -conf ./common.conf -conf "./dosbox/$game.conf"
 

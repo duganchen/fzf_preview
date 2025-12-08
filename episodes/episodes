@@ -9,7 +9,11 @@ fi
 
 cd "$(dirname "$1")" || exit 1
 
-flick="$(cat "$index" | fzf -d"$(printf '\t')" --accept-nth=1 --with-nth=2 --preview='fzf_preview {1}')"
+if fzf_can_show_image; then
+	flick="$(cat "$index" | fzf -d"$(printf '\t')" --accept-nth=1 --with-nth=2 --preview='fzf_preview -i {1}')"
+else
+	flick="$(cat "$index" | fzf -d"$(printf '\t')" --accept-nth=1 --with-nth=2 --preview='fzf_preview {1}')"
+fi
 
 if [ -f "$flick" ]; then
 	mpv "$flick"

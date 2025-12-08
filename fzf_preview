@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+image_preview=False
+
+while getopts i opt; do
+	case $opt in
+	i)
+		image_preview=True
+		;;
+	*)
+		echo Invalid option
+		exit 1
+		;;
+	esac
+done
+shift "$((OPTIND-1))"
+
 if [ ! -f "$1" ]; then
 	echo "$1" not found.
 	exit 1
@@ -8,8 +23,8 @@ fi
 cache="${XDG_CACHE_DIR:-$HOME/.cache/fzf_thumbnails}"
 mkdir -p "$cache"
 
-image="";
-if fzf_can_show_image; then
+image=""
+if [ "$image_preview" == "True" ]; then
 	video=False
 
 	mime="$(file --mime-type -b "$1" | cut -d/ -f1)"
@@ -26,7 +41,7 @@ if fzf_can_show_image; then
 		image="${cache}/$(stat -c "%D_%i_%Y_%s" "$1").png"
 
 		if [ ! -f "$image" ]; then
-			ffmpegthumbnailer -i "$1" -o "${image}" -s 1080 -m > /dev/null 2>&1
+			ffmpegthumbnailer -i "$1" -o "${image}" -s 1080 -m >/dev/null 2>&1
 		fi
 	fi
 fi
