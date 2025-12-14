@@ -32,7 +32,7 @@ The common.conf file has settings that I'd want for every game. It contains this
 
     [sdl]
     fullscreen = true
-    vsync = adaptive
+    vsync = yield
 
     [fluidsynth]
     soundfont = Reality_GMGS_falcomod.sf2
