@@ -3,14 +3,25 @@
 cd "$DOSROOT"
 
 if fzf_can_show_image; then
-	game="$(cat index.txt | fzf --preview='fzf_preview -i boxart/{}.jpg')"
+	if [ $# -eq 0 ]; then
+		game="$(cat index.txt | fzf --preview='fzf_preview -i boxart/{}.jpg')"
+	else
+		game="$(cat index.txt | fzf --preview='fzf_preview -i boxart/{}.jpg' --select-1 -q "$@")"
+	fi
 else
-	game="$(cat index.txt | fzf --preview='fzf_preview boxart/{}.jpg')"
+	if [ $# -eq 0 ]; then
+		game="$(cat index.txt | fzf --preview='fzf_preview boxart/{}.jpg')"
+	else
+		game="$(cat index.txt | fzf --preview='fzf_preview boxart/{}.jpg' --select-1 -q "$@")"
+	fi
 fi
 if [[ "$game" != "" ]]; then
-    flatpak run io.github.dosbox-staging -conf ./common.conf -conf "./dosbox/$game.conf"
+	flatpak run io.github.dosbox-staging -conf ./common.conf -conf "./dosbox/$game.conf"
 
-    # And this is MRU.
-    # https://stackoverflow.com/a/67031431
-    printf "/^%s$/m0\nwq\n" "$game" | ed -s index.txt -
+    # Pretty sure I only want the MRU updated for interactive choices
+	if [ $# -eq 0 ]; then
+		# And this is MRU.
+		# https://stackoverflow.com/a/67031431
+		printf "/^%s$/m0\nwq\n" "$game" | ed -s index.txt -
+	fi
 fi
